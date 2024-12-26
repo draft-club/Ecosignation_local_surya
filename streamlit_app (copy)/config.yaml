@@ -1,0 +1,6 @@
+dpi: 300  # Enhanced DPI for improved OCR accuracy
+language: 'ara'  # Add multiple languages
+tesseract_config: '--psm 3 --oem 3'
+header_margin: 80
+footer_margin: 80
+openai_api_key: ''

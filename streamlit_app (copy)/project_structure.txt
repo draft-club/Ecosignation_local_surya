@@ -1,0 +1,13 @@
+Streamlit-Modular_package-RCAR-OCR/
+│
+├── streamlit_app/
+│   ├── app.py                   # The Streamlit application
+│   ├── ocr_preprocessing/
+│   ├── utils/
+│   ├── config/
+│   ├── app_css.py
+│   ├── app_constants.py
+│   └── paths.py
+│
+├── requirements.txt              # Project dependencies
+└── tests/                        # Test directory (if necessary)

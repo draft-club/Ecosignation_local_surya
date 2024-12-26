@@ -1,0 +1,54 @@
+# Use the official Python image as the base
+image: python:3.9
+
+# Define the stages of the pipeline
+stages:
+  - setup
+  - test
+  - build
+  - deploy
+
+# Install dependencies stage
+setup_job:
+  stage: setup
+  script:
+    - python --version
+    - pip install -r requirements.txt
+  artifacts:
+    paths:
+      - venv/
+  cache:
+    paths:
+      - venv/
+    key: "$CI_COMMIT_REF_SLUG"
+
+# Test stage: running unit tests
+test_job:
+  stage: test
+  script:
+    - python -m unittest discover -s tests/ -p "test_*.py"
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+  coverage: '/TOTAL.*\s+\d+%\s*/'
+
+# Build Docker image stage
+build_job:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+  only:
+    - main
+
+# Deploy Docker image to GitLab Container Registry
+deploy_job:
+  stage: deploy
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  environment:
+    name: production
+    url: http://your-production-url
+  only:
+    - main
